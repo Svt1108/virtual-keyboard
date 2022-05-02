@@ -1,10 +1,3 @@
-export class Post {
-  constructor(title) {
-    this.title = title;
-    this.date = new Date();
-  }
+import { keyEng, keyRus } from "./constants";
 
-  toString() {
-    return JSON.stringify({ title: this.title, date: this.date.toJSON() });
-  }
-}
+console.log(`test ${keyEng}`);
