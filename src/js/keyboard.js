@@ -1,10 +1,11 @@
 import { keyEng, keyRus } from "./constants";
 
+//localStorage.clear();
+
+let flagCaps = false;
+let lang = "eng";
+
 class VirtualKeyboard {
-  //   constructor() {
-
-  // }
-
   addContent() {
     const main = document.createElement("div");
     main.classList.add("main");
@@ -23,9 +24,10 @@ class VirtualKeyboard {
     textarea.setAttribute("contenteditable", "true");
     wrap.appendChild(textarea);
 
-    const textareaP = document.createElement("p");
-    textareaP.classList.add("textarea__p");
-    textarea.appendChild(textareaP);
+    // const textareaP = document.createElement("p");
+    // textareaP.classList.add("textarea__p");
+    // //   textareaP.setAttribute("id", `textarea__p`);
+    // textarea.appendChild(textareaP);
 
     this.keyboard = document.createElement("div");
     this.keyboard.classList.add("keyboard");
@@ -45,7 +47,7 @@ class VirtualKeyboard {
     addition.appendChild(change);
 
     const changeText = document.createElement("p");
-    changeText.innerHTML = `Press <span>Shift+Alt</span> to change language or`;
+    changeText.innerHTML = `Press <span>left Shift+Alt</span> to change language or`;
     changeText.classList.add("change__text");
     change.appendChild(changeText);
 
@@ -63,19 +65,34 @@ class VirtualKeyboard {
     keyLang.forEach((element) => {
       keyboardKey = document.createElement("div");
       keyboardKey.setAttribute("id", `${element.code}`);
+      keyboardKey.setAttribute("value", `${element.value}`);
 
-      if (element.code === "ArrowLeft") keyboardKey.innerHTML = `&larr;`;
-      else if (element.code === "ArrowRight") keyboardKey.innerHTML = `&rarr;`;
-      else if (element.code === "ArrowUp") keyboardKey.innerHTML = `&uarr;`;
-      else if (element.code === "ArrowDown") keyboardKey.innerHTML = `&darr;`;
-      else if (element.code.includes("Control")) keyboardKey.innerHTML = `Ctrl`;
-      else if (element.code.includes("Meta")) keyboardKey.innerHTML = `Win`;
-      else if (element.code.includes("Delete")) keyboardKey.innerHTML = `Del`;
+      const keyCode = element.code;
+
+      if (keyCode === "ArrowLeft") keyboardKey.innerHTML = `&larr;`;
+      else if (keyCode === "ArrowRight") keyboardKey.innerHTML = `&rarr;`;
+      else if (keyCode === "ArrowUp") keyboardKey.innerHTML = `&uarr;`;
+      else if (keyCode === "ArrowDown") keyboardKey.innerHTML = `&darr;`;
+      else if (keyCode.includes("Control")) keyboardKey.innerHTML = `Ctrl`;
+      else if (keyCode.includes("Meta")) keyboardKey.innerHTML = `Win`;
+      else if (keyCode === "Delete") keyboardKey.innerHTML = `Del`;
+      else if (keyCode.includes("Alt")) keyboardKey.innerHTML = `Alt`;
+      //     else if (keyCode === "Backquote") keyboardKey.innerHTML = "`";
       else keyboardKey.innerHTML = `${element.value}`;
 
       keyboardKey.classList.add("keyboard__key");
 
-      const keyCode = element.code;
+      if (
+        keyCode.includes("Key") ||
+        keyCode === "BracketLeft" ||
+        keyCode === "BracketRight" ||
+        keyCode === "Semicolon" ||
+        keyCode === "Quote" ||
+        keyCode === "Backquote" ||
+        keyCode === "Comma" ||
+        keyCode === "Period"
+      )
+        keyboardKey.classList.add("key_letter");
       if (keyCode === "Backspace") keyboardKey.classList.add("key_backspace");
       if (keyCode === "Tab" || keyCode === "Delete")
         keyboardKey.classList.add("key_tabdel");
@@ -116,14 +133,104 @@ class VirtualKeyboard {
         breakrow.classList.add("breakrow");
         this.keyboard.appendChild(breakrow);
       }
-      //      this.keyboard.appendChild(document.createElement("br"));
-
-      //     console.log(element.code);
     });
-    //   console.log(`test ${keyEng}`);
+  }
+
+  removeKeyboard() {
+    this.keyboard.innerHTML = "";
   }
 }
 
 const virtualKeyboard = new VirtualKeyboard();
 virtualKeyboard.addContent();
-virtualKeyboard.addKeyboard("eng");
+//lang = false;
+if (localStorage.getItem("lang_saved"))
+  lang = localStorage.getItem("lang_saved");
+virtualKeyboard.addKeyboard(lang);
+
+// document.addEventListener("keydown", function (event) {
+//   console.log(event);
+// });
+
+document.onkeydown = function (event) {
+  const textarea = document.querySelector(".textarea");
+  const keyDown = document.getElementById(event.code);
+  const value = keyDown.getAttribute("value");
+  const keyCode = keyDown.getAttribute("id");
+  keyDown.classList.add("keyActive");
+
+  event.preventDefault();
+
+  if (keyCode === "Enter") {
+    const newSymbol = document.createElement("br");
+    textarea.appendChild(newSymbol);
+  } else if (keyCode === "CapsLock") {
+    const keys = document.querySelectorAll(".key_letter");
+    if (!flagCaps) {
+      for (let i = 0; i < keys.length; i++) {
+        keys[i].textContent = keys[i].textContent.toUpperCase();
+      }
+    } else {
+      keyDown.classList.remove("keyActive");
+      for (let i = 0; i < keys.length; i++) {
+        keys[i].textContent = keys[i].textContent.toLowerCase();
+      }
+    }
+    flagCaps = !flagCaps;
+  } else {
+    let newSymbol;
+    if (!flagCaps) {
+      newSymbol = document.createTextNode(value);
+    } else {
+      newSymbol = document.createTextNode(value.toUpperCase());
+    }
+    textarea.appendChild(newSymbol);
+  }
+};
+
+document.onkeyup = function (event) {
+  const keyUp = document.getElementById(event.code);
+  if (event.code !== "CapsLock") keyUp.classList.remove("keyActive");
+};
+
+// const textArea = document.querySelector('testarea');
+// var newEle = document.createTextNode('\n');
+// docFragment.appendChild(newEle);
+
+function runOnKeys(func, ...codes) {
+  let pressed = new Set();
+
+  document.addEventListener("keydown", function (event) {
+    event.preventDefault();
+    pressed.add(event.code);
+
+    for (let code of codes) {
+      if (!pressed.has(code)) {
+        return;
+      }
+    }
+
+    pressed.clear();
+
+    func();
+  });
+
+  document.addEventListener("keyup", function (event) {
+    pressed.delete(event.code);
+  });
+}
+
+runOnKeys(
+  () => {
+    if (lang === "eng") {
+      lang = "rus";
+    } else lang = "eng";
+    localStorage.clear();
+    localStorage.setItem("lang_saved", lang);
+    console.log("in storage: " + lang);
+    virtualKeyboard.removeKeyboard();
+    virtualKeyboard.addKeyboard(lang);
+  },
+  "ShiftLeft",
+  "AltLeft"
+);
