@@ -167,6 +167,8 @@ function keyHandle(keyDown) {
   keyDown.classList.add("keyActive");
   textarea.focus();
 
+  /*----------------------Enter----------------------------- */
+
   if (keyCode === "Enter") {
     let finText =
       textarea.value.substring(0, start) + "\n" + textarea.value.substring(end);
@@ -176,6 +178,7 @@ function keyHandle(keyDown) {
     textarea.selectionEnd = textarea.selectionStart =
       newEnd - textarea.value.substring(end).length + 1;
   } else if (keyCode === "CapsLock") {
+    /*----------------------CapsLock----------------------------- */
     const keys = document.querySelectorAll(".key_letter");
     if (!flagCaps) {
       for (let i = 0; i < keys.length; i++) {
@@ -189,6 +192,7 @@ function keyHandle(keyDown) {
     }
     flagCaps = !flagCaps;
   } else if (keyCode === "Tab") {
+    /*----------------------Tab----------------------------- */
     let newSymbol = "    ";
     let finText =
       textarea.value.substring(0, start) +
@@ -198,18 +202,21 @@ function keyHandle(keyDown) {
     textarea.focus();
     textarea.selectionEnd = start == end ? end + newSymbol.length : end;
   } else if (keyCode === "Delete") {
+  /*----------------------Delete----------------------------- */
     let finText =
       textarea.value.substring(0, start) + textarea.value.substring(end + 1);
     textarea.value = finText;
     textarea.focus();
     textarea.selectionEnd = textarea.selectionStart = start;
   } else if (keyCode === "Backspace") {
+  /*----------------------Backspace----------------------------- */
     let finText =
       textarea.value.substring(0, start - 1) + textarea.value.substring(end);
     textarea.value = finText;
     textarea.focus();
     textarea.selectionEnd = textarea.selectionStart = start - 1;
   } else {
+  /*----------------------Text and digit ----------------------------- */
     let newSymbol;
     if (!flagCaps) {
       newSymbol = value;
