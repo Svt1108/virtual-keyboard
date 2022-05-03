@@ -86,7 +86,6 @@ html {
 
       &:hover {
         background-color: #7ebbaa;
-        // background-color: lighten($color: #000000, $amount: 0);
         color: #005f52;
       }
 
@@ -207,8 +206,14 @@ html {
         color: #efc3e7;
 
         &:hover {
-          background-color: #efc3e7;
+          background-color: #7ebbaa;
           color: #005f52;
+        }
+
+        &:active {
+          background-color: #005f52;
+          color: #efc3e7;
+          border: #efc3e7 3px solid;
         }
       }
     }

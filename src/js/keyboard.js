@@ -148,18 +148,20 @@ if (localStorage.getItem("lang_saved"))
   lang = localStorage.getItem("lang_saved");
 virtualKeyboard.addKeyboard(lang);
 
+const textarea = document.querySelector(".textarea");
+const keyboard = document.querySelector(".keyboard");
+const change = document.querySelector(".change__button");
+
 // document.addEventListener("keydown", function (event) {
 //   console.log(event);
 // });
 
-document.onkeydown = function (event) {
-  const textarea = document.querySelector(".textarea");
-  const keyDown = document.getElementById(event.code);
+/* обработка нажатия клавиши (мышкой или на клавиатуре) */
+
+function keyHandle(keyDown) {
   const value = keyDown.getAttribute("value");
   const keyCode = keyDown.getAttribute("id");
   keyDown.classList.add("keyActive");
-
-  event.preventDefault();
 
   if (keyCode === "Enter") {
     const newSymbol = document.createElement("br");
@@ -186,16 +188,35 @@ document.onkeydown = function (event) {
     }
     textarea.appendChild(newSymbol);
   }
+}
+
+document.onkeydown = function (event) {
+  const keyDown = document.getElementById(event.code);
+
+  if (keyDown != null) {
+    event.preventDefault();
+    keyHandle(keyDown);
+  }
 };
 
 document.onkeyup = function (event) {
   const keyUp = document.getElementById(event.code);
-  if (event.code !== "CapsLock") keyUp.classList.remove("keyActive");
+  if (keyUp != null && event.code !== "CapsLock")
+    keyUp.classList.remove("keyActive");
 };
 
-// const textArea = document.querySelector('testarea');
-// var newEle = document.createTextNode('\n');
-// docFragment.appendChild(newEle);
+keyboard.onclick = function (event) {
+  keyHandle(event.target);
+  const keyCode = event.target.getAttribute("id");
+  if (keyCode !== "CapsLock") event.target.classList.remove("keyActive");
+};
+
+/* ---------------смена языка по клику мыши --------------------- */
+change.onclick = function (event) {
+  changeLanguage();
+};
+
+/* ---------------смена языка по нажатию клавиш --------------------- */
 
 function runOnKeys(func, ...codes) {
   let pressed = new Set();
@@ -209,9 +230,7 @@ function runOnKeys(func, ...codes) {
         return;
       }
     }
-
     pressed.clear();
-
     func();
   });
 
@@ -220,17 +239,14 @@ function runOnKeys(func, ...codes) {
   });
 }
 
-runOnKeys(
-  () => {
-    if (lang === "eng") {
-      lang = "rus";
-    } else lang = "eng";
-    localStorage.clear();
-    localStorage.setItem("lang_saved", lang);
-    console.log("in storage: " + lang);
-    virtualKeyboard.removeKeyboard();
-    virtualKeyboard.addKeyboard(lang);
-  },
-  "ShiftLeft",
-  "AltLeft"
-);
+runOnKeys(changeLanguage, "ShiftLeft", "AltLeft");
+
+function changeLanguage() {
+  if (lang === "eng") {
+    lang = "rus";
+  } else lang = "eng";
+  localStorage.clear();
+  localStorage.setItem("lang_saved", lang);
+  virtualKeyboard.removeKeyboard();
+  virtualKeyboard.addKeyboard(lang);
+}
