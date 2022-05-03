@@ -159,7 +159,7 @@ const change = document.querySelector(".change__button");
 
 /* обработка нажатия клавиши (мышкой или на клавиатуре) */
 
-function keyHandle(keyDown) {
+function keyHandle(keyDown, shiftKey) {
   const value = keyDown.getAttribute("value");
   const keyCode = keyDown.getAttribute("id");
   let start = textarea.selectionStart;
@@ -202,27 +202,40 @@ function keyHandle(keyDown) {
     textarea.focus();
     textarea.selectionEnd = start == end ? end + newSymbol.length : end;
   } else if (keyCode === "Delete") {
-  /*----------------------Delete----------------------------- */
+    /*----------------------Delete----------------------------- */
     let finText =
       textarea.value.substring(0, start) + textarea.value.substring(end + 1);
     textarea.value = finText;
     textarea.focus();
     textarea.selectionEnd = textarea.selectionStart = start;
+  } else if (keyCode === "ArrowLeft") {
+    /*----------------------ArrowLeft----------------------------- */
+    textarea.selectionEnd = textarea.selectionStart = start - 1;
+  } else if (keyCode === "ArrowRight") {
+    /*----------------------ArrowRight----------------------------- */
+    textarea.selectionEnd = textarea.selectionStart = start + 1;
   } else if (keyCode === "Backspace") {
-  /*----------------------Backspace----------------------------- */
+    /*----------------------Backspace----------------------------- */
     let finText =
       textarea.value.substring(0, start - 1) + textarea.value.substring(end);
     textarea.value = finText;
     textarea.focus();
     textarea.selectionEnd = textarea.selectionStart = start - 1;
-  } else {
-  /*----------------------Text and digit ----------------------------- */
+  } else if (
+    !keyCode.includes("Shift") &&
+    !keyCode.includes("Control") &&
+    !keyCode.includes("Alt") &&
+    !keyCode.includes("Meta")
+  ) {
+    /*----------------------Text and digit ----------------------------- */
     let newSymbol;
     if (!flagCaps) {
       newSymbol = value;
     } else {
       newSymbol = value.toUpperCase();
     }
+
+    if (shiftKey === true) newSymbol = value.toUpperCase();
 
     let finText =
       textarea.value.substring(0, start) +
@@ -237,9 +250,12 @@ function keyHandle(keyDown) {
 document.onkeydown = function (event) {
   const keyDown = document.getElementById(event.code);
 
+  let shiftKey = false;
+  if (event.shiftKey) shiftKey = true;
+
   if (keyDown != null) {
     event.preventDefault();
-    keyHandle(keyDown);
+    keyHandle(keyDown, shiftKey);
   }
 };
 
@@ -254,9 +270,11 @@ keyboard.onmousedown = function (event) {
   event.preventDefault();
   // console.log(event.currentTarget);
   const keyCode = event.target.getAttribute("id");
+  let shiftKey = false;
+  if (event.shiftKey) shiftKey = true;
 
   // event.stopPropagation();
-  if (keyCode) keyHandle(event.target);
+  if (keyCode) keyHandle(event.target, shiftKey);
   if (keyCode !== "CapsLock") event.target.classList.remove("keyActive");
 };
 
@@ -267,7 +285,7 @@ change.onclick = function (event) {
 
 /* ---------------смена языка по нажатию клавиш --------------------- */
 
-function runOnKeys(func, ...codes) {
+function someKeys(func, ...codes) {
   let pressed = new Set();
 
   document.addEventListener("keydown", function (event) {
@@ -288,7 +306,7 @@ function runOnKeys(func, ...codes) {
   });
 }
 
-runOnKeys(changeLanguage, "ShiftLeft", "AltLeft");
+someKeys(changeLanguage, "ShiftLeft", "AltLeft");
 
 function changeLanguage() {
   if (lang === "eng") {
