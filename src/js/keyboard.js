@@ -22,13 +22,7 @@ class VirtualKeyboard {
     const textarea = document.createElement("textarea");
     textarea.classList.add("textarea");
     textarea.setAttribute("id", `textarea`);
-    // textarea.setAttribute("contenteditable", "true");
     wrap.appendChild(textarea);
-
-    // const textareaP = document.createElement("p");
-    // textareaP.classList.add("textarea__p");
-    // //   textareaP.setAttribute("id", `textarea__p`);
-    // textarea.appendChild(textareaP);
 
     this.keyboard = document.createElement("div");
     this.keyboard.classList.add("keyboard");
@@ -78,7 +72,6 @@ class VirtualKeyboard {
       else if (keyCode.includes("Meta")) keyboardKey.innerHTML = `Win`;
       else if (keyCode === "Delete") keyboardKey.innerHTML = `Del`;
       else if (keyCode.includes("Alt")) keyboardKey.innerHTML = `Alt`;
-      //     else if (keyCode === "Backquote") keyboardKey.innerHTML = "`";
       else keyboardKey.innerHTML = `${element.value}`;
 
       keyboardKey.classList.add("keyboard__key");
@@ -144,7 +137,6 @@ class VirtualKeyboard {
 
 const virtualKeyboard = new VirtualKeyboard();
 virtualKeyboard.addContent();
-//lang = false;
 if (localStorage.getItem("lang_saved"))
   lang = localStorage.getItem("lang_saved");
 virtualKeyboard.addKeyboard(lang);
@@ -152,10 +144,6 @@ virtualKeyboard.addKeyboard(lang);
 const textarea = document.getElementById("textarea");
 const keyboard = document.querySelector(".keyboard");
 const change = document.querySelector(".change__button");
-
-// document.addEventListener("keydown", function (event) {
-//   console.log(event);
-// });
 
 /* обработка нажатия клавиши (мышкой или на клавиатуре) */
 
