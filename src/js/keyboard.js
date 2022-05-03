@@ -19,9 +19,10 @@ class VirtualKeyboard {
     h1.innerHTML = `Virtual keyboard`;
     wrap.appendChild(h1);
 
-    const textarea = document.createElement("div");
+    const textarea = document.createElement("textarea");
     textarea.classList.add("textarea");
-    textarea.setAttribute("contenteditable", "true");
+    textarea.setAttribute("id", `textarea`);
+    // textarea.setAttribute("contenteditable", "true");
     wrap.appendChild(textarea);
 
     // const textareaP = document.createElement("p");
@@ -148,7 +149,7 @@ if (localStorage.getItem("lang_saved"))
   lang = localStorage.getItem("lang_saved");
 virtualKeyboard.addKeyboard(lang);
 
-const textarea = document.querySelector(".textarea");
+const textarea = document.getElementById("textarea");
 const keyboard = document.querySelector(".keyboard");
 const change = document.querySelector(".change__button");
 
@@ -161,11 +162,19 @@ const change = document.querySelector(".change__button");
 function keyHandle(keyDown) {
   const value = keyDown.getAttribute("value");
   const keyCode = keyDown.getAttribute("id");
+  let start = textarea.selectionStart;
+  let end = textarea.selectionEnd;
   keyDown.classList.add("keyActive");
+  textarea.focus();
 
   if (keyCode === "Enter") {
-    const newSymbol = document.createElement("br");
-    textarea.appendChild(newSymbol);
+    let finText =
+      textarea.value.substring(0, start) + "\n" + textarea.value.substring(end);
+    textarea.value = finText;
+    textarea.focus();
+    let newEnd = textarea.selectionEnd;
+    textarea.selectionEnd = textarea.selectionStart =
+      newEnd - textarea.value.substring(end).length + 1;
   } else if (keyCode === "CapsLock") {
     const keys = document.querySelectorAll(".key_letter");
     if (!flagCaps) {
@@ -179,14 +188,42 @@ function keyHandle(keyDown) {
       }
     }
     flagCaps = !flagCaps;
+  } else if (keyCode === "Tab") {
+    let newSymbol = "    ";
+    let finText =
+      textarea.value.substring(0, start) +
+      newSymbol +
+      textarea.value.substring(end);
+    textarea.value = finText;
+    textarea.focus();
+    textarea.selectionEnd = start == end ? end + newSymbol.length : end;
+  } else if (keyCode === "Delete") {
+    let finText =
+      textarea.value.substring(0, start) + textarea.value.substring(end + 1);
+    textarea.value = finText;
+    textarea.focus();
+    textarea.selectionEnd = textarea.selectionStart = start;
+  } else if (keyCode === "Backspace") {
+    let finText =
+      textarea.value.substring(0, start - 1) + textarea.value.substring(end);
+    textarea.value = finText;
+    textarea.focus();
+    textarea.selectionEnd = textarea.selectionStart = start - 1;
   } else {
     let newSymbol;
     if (!flagCaps) {
-      newSymbol = document.createTextNode(value);
+      newSymbol = value;
     } else {
-      newSymbol = document.createTextNode(value.toUpperCase());
+      newSymbol = value.toUpperCase();
     }
-    textarea.appendChild(newSymbol);
+
+    let finText =
+      textarea.value.substring(0, start) +
+      newSymbol +
+      textarea.value.substring(end);
+    textarea.value = finText;
+    textarea.focus();
+    textarea.selectionEnd = start == end ? end + newSymbol.length : end;
   }
 }
 
@@ -205,9 +242,14 @@ document.onkeyup = function (event) {
     keyUp.classList.remove("keyActive");
 };
 
-keyboard.onclick = function (event) {
-  keyHandle(event.target);
+keyboard.onmousedown = function (event) {
+  event.stopImmediatePropagation();
+  event.preventDefault();
+  // console.log(event.currentTarget);
   const keyCode = event.target.getAttribute("id");
+
+  // event.stopPropagation();
+  if (keyCode) keyHandle(event.target);
   if (keyCode !== "CapsLock") event.target.classList.remove("keyActive");
 };
 

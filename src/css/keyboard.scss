@@ -47,10 +47,13 @@ html {
     border-radius: 5px;
     font-size: 2rem;
     padding: 2rem;
-    display: grid;
-    grid-template-rows: repeat(auto-fill, 2vmin);
+    // display: grid;
+    // grid-template-rows: repeat(auto-fill, 2vmin);
+    //display: inline-block;
     row-gap: 1.5rem;
     overflow-y: auto;
+    white-space: pre-wrap;
+    line-height: 140%;
 
     .textarea__p {
       width: 100%;
@@ -87,6 +90,7 @@ html {
       &:hover {
         background-color: #7ebbaa;
         color: #005f52;
+        cursor: pointer;
       }
 
       &:active {
