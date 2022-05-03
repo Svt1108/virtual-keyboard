@@ -271,7 +271,7 @@ keyboard.onmousedown = function (event) {
   // console.log(event.currentTarget);
   const keyCode = event.target.getAttribute("id");
   let shiftKey = false;
-  if (event.shiftKey) shiftKey = true;
+  if (keyCode.includes("Shift")) shiftKey = true;
 
   // event.stopPropagation();
   if (keyCode) keyHandle(event.target, shiftKey);
