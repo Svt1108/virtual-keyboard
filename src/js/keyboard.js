@@ -131,7 +131,7 @@ class VirtualKeyboard {
     const keyCode = keyDown.getAttribute("id");
     const value = this.keyLang[keyCode].value;
     const valueShift = this.keyLang[keyCode].valueShift;
-    let newSymbol;
+    let newSymbol = "";
     let finText;
 
     let start = this.textarea.selectionStart;
@@ -216,11 +216,16 @@ class VirtualKeyboard {
       if (ctrlKey === true && keyCode === "KeyC") {
         this.copyboard = this.textarea.value.substring(start, end);
         finText = this.textarea.value;
-        newSymbol = "";
+      } else if (ctrlKey === true && keyCode === "KeyX") {
+        this.copyboard = this.textarea.value.substring(start, end);
+        finText =
+          this.textarea.value.substring(0, start) +
+          this.textarea.value.substring(end);
       } else if (keyCode === "KeyV") {
         newSymbol = this.copyboard;
         finText =
           this.textarea.value.substring(0, start) +
+          this.textarea.value.substring(start, end) +
           newSymbol +
           this.textarea.value.substring(end);
       } else {
@@ -240,7 +245,6 @@ class VirtualKeyboard {
       }
       this.textarea.value = finText;
       this.textarea.focus();
-      console.log(newSymbol);
       this.textarea.selectionEnd = start == end ? end + newSymbol.length : end;
     }
   }
