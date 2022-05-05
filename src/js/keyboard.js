@@ -132,7 +132,7 @@ class VirtualKeyboard {
     const value = this.keyLang[keyCode].value;
     const valueShift = this.keyLang[keyCode].valueShift;
     let newSymbol = "";
-    let finText;
+    let finText = "";
 
     let start = this.textarea.selectionStart;
     let end = this.textarea.selectionEnd;
@@ -178,10 +178,14 @@ class VirtualKeyboard {
       this.textarea.selectionEnd = start == end ? end + newSymbol.length : end;
     } else if (keyCode === "Delete") {
       /*----------------------Delete----------------------------- */
-
-      finText =
-        this.textarea.value.substring(0, start) +
-        this.textarea.value.substring(end + 1);
+      if (start === end)
+        finText =
+          this.textarea.value.substring(0, start) +
+          this.textarea.value.substring(end + 1);
+      else
+        finText =
+          this.textarea.value.substring(0, start) +
+          this.textarea.value.substring(end);
       this.textarea.value = finText;
       this.textarea.focus();
       this.textarea.selectionEnd = this.textarea.selectionStart = start;
@@ -198,13 +202,19 @@ class VirtualKeyboard {
         this.textarea.selectionEnd = this.textarea.selectionStart = start + 1;
     } else if (keyCode === "Backspace") {
       /*----------------------Backspace----------------------------- */
-
-      finText =
-        this.textarea.value.substring(0, start - 1) +
-        this.textarea.value.substring(end);
+      if (start === end)
+        finText =
+          this.textarea.value.substring(0, start - 1) +
+          this.textarea.value.substring(end);
+      else
+        finText =
+          this.textarea.value.substring(0, start) +
+          this.textarea.value.substring(end);
       this.textarea.value = finText;
       this.textarea.focus();
-      this.textarea.selectionEnd = this.textarea.selectionStart = start - 1;
+      if (start === end)
+        this.textarea.selectionEnd = this.textarea.selectionStart = start - 1;
+      else this.textarea.selectionEnd = this.textarea.selectionStart = start;
     } else if (
       !keyCode.includes("Shift") &&
       !keyCode.includes("Control") &&
@@ -212,7 +222,7 @@ class VirtualKeyboard {
       !keyCode.includes("Meta")
     ) {
       /*----------------------Text and digit ----------------------------- */
-      /*----------------------------Ctrl+C, Ctrl+V--------------------------*/
+      /*----------------------------Ctrl+C, Ctrl+V, Ctrl+X  -------------------*/
       if (ctrlKey === true && keyCode === "KeyC") {
         this.copyboard = this.textarea.value.substring(start, end);
         finText = this.textarea.value;
@@ -245,7 +255,11 @@ class VirtualKeyboard {
       }
       this.textarea.value = finText;
       this.textarea.focus();
-      this.textarea.selectionEnd = start == end ? end + newSymbol.length : end;
+      if (ctrlKey === true && keyCode === "KeyX") {
+        this.textarea.selectionEnd = this.textarea.selectionStart = start;
+      } else
+        this.textarea.selectionEnd =
+          start == end ? end + newSymbol.length : end;
     }
   }
 
