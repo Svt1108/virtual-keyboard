@@ -200,21 +200,68 @@ class VirtualKeyboard {
       if (shiftKey === true) this.textarea.selectionEnd = end + 1;
       else
         this.textarea.selectionEnd = this.textarea.selectionStart = start + 1;
+    } else if (keyCode === "ArrowUp") {
+      let NPos;
+      if (this.textarea.value[end] === "\n")
+        NPos = this.textarea.value.lastIndexOf("\n", end - 1);
+      else NPos = this.textarea.value.lastIndexOf("\n", end);
+      if (NPos !== -1) {
+        let curStrLength = end - NPos;
+        let prevNPos = this.textarea.value.lastIndexOf("\n", NPos - 1);
+        let prevStrLength;
+        if (prevNPos !== -1) prevStrLength = NPos - prevNPos;
+        else prevStrLength = end - curStrLength + 1;
+
+        if (curStrLength >= prevStrLength)
+          this.textarea.selectionEnd = this.textarea.selectionStart = NPos;
+        else
+          this.textarea.selectionEnd = this.textarea.selectionStart =
+            end - prevStrLength;
+      }
+    } else if (keyCode === "ArrowDown") {
+      /*----------------------ArrowRight----------------------------- */
+      let NPos;
+      if (this.textarea.value[end] === "\n")
+        NPos = this.textarea.value.lastIndexOf("\n", end - 1);
+      else NPos = this.textarea.value.lastIndexOf("\n", end);
+      let curStrLength;
+      let nextStrLength;
+      if (NPos !== -1) curStrLength = end - NPos;
+      else curStrLength = end + 1;
+
+      let endCurStrPos = this.textarea.value.indexOf("\n", end);
+      if (endCurStrPos !== -1) {
+        let nextNPos = this.textarea.value.indexOf("\n", endCurStrPos + 1);
+        if (nextNPos === -1) {
+          nextNPos = this.textarea.value.length;
+        }
+
+        nextStrLength = nextNPos - endCurStrPos;
+
+        if (curStrLength >= nextStrLength)
+          this.textarea.selectionEnd = this.textarea.selectionStart = nextNPos;
+        else
+          this.textarea.selectionEnd = this.textarea.selectionStart =
+            endCurStrPos + curStrLength;
+      }
     } else if (keyCode === "Backspace") {
       /*----------------------Backspace----------------------------- */
-      if (start === end)
-        finText =
-          this.textarea.value.substring(0, start - 1) +
-          this.textarea.value.substring(end);
-      else
-        finText =
-          this.textarea.value.substring(0, start) +
-          this.textarea.value.substring(end);
-      this.textarea.value = finText;
-      this.textarea.focus();
-      if (start === end)
-        this.textarea.selectionEnd = this.textarea.selectionStart = start - 1;
-      else this.textarea.selectionEnd = this.textarea.selectionStart = start;
+      if (start !== 0) {
+        if (start === end)
+          finText =
+            this.textarea.value.substring(0, start - 1) +
+            this.textarea.value.substring(end);
+        else
+          finText =
+            this.textarea.value.substring(0, start) +
+            this.textarea.value.substring(end);
+        this.textarea.value = finText;
+        this.textarea.focus();
+        if (start === end)
+          this.textarea.selectionEnd = this.textarea.selectionStart = start - 1;
+        else
+          this.textarea.selectionEnd = this.textarea.selectionStart = start - 1;
+      }
     } else if (
       !keyCode.includes("Shift") &&
       !keyCode.includes("Control") &&

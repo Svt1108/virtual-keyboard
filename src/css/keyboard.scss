@@ -48,13 +48,11 @@ html {
     font-size: 2rem;
     color: #002e2c;
     padding: 2rem;
-    // display: grid;
-    // grid-template-rows: repeat(auto-fill, 2vmin);
-    //display: inline-block;
     row-gap: 1.5rem;
     overflow-y: auto;
     white-space: pre-wrap;
     line-height: 140%;
+    outline: none;
 
     .textarea__p {
       width: 100%;
