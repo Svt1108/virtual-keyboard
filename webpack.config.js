@@ -17,7 +17,6 @@ module.exports = {
       template: path.resolve(__dirname, "./src/index.html"),
       filename: "index.html",
       inject: "body",
-      path: path.resolve(__dirname, "./dist"),
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
