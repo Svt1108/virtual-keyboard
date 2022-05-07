@@ -5,7 +5,7 @@ import VirtualKeyboard from "./js/keyboard";
 const virtualKeyboard = new VirtualKeyboard();
 virtualKeyboard.addContent();
 const langSaved = localStorage.getItem("lang_saved");
-let lang = 'eng';
+let lang = "eng";
 if (langSaved) {
   lang = langSaved;
 }
