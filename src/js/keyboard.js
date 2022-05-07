@@ -5,6 +5,8 @@ let lang = "eng";
 class VirtualKeyboard {
   constructor() {
     this.flagCaps = false;
+    this.shiftKey = false;
+    this.ctrlKey = false;
     this.copyboard = "";
   }
 
@@ -133,7 +135,9 @@ class VirtualKeyboard {
     });
   }
 
-  keyHandle(keyDown, shiftKey, ctrlKey) {
+  keyHandle(keyDown) {
+    const { shiftKey } = this;
+    const { ctrlKey } = this;
     const keyCode = keyDown.getAttribute("id");
     const { value } = this.keyLang[keyCode];
     const { valueShift } = this.keyLang[keyCode];
@@ -353,24 +357,36 @@ class VirtualKeyboard {
     document.onkeydown = (event) => {
       const keyDown = document.getElementById(event.code);
 
-      let shiftKey = false;
-      if (event.shiftKey) shiftKey = true;
-
-      let ctrlKey = false;
-      if (event.ctrlKey) ctrlKey = true;
+      if (!event.code.includes("Shift") && event.shiftKey) this.shiftKey = true;
+      if (!event.code.includes("Control") && event.ctrlKey) this.ctrlKey = true;
 
       if (keyDown != null) {
         event.preventDefault();
-        this.keyHandle(keyDown, shiftKey, ctrlKey);
+        this.keyHandle(keyDown);
       }
     };
   }
 
   keyboardEventCancel() {
-    document.onkeyup = function keybEventCanc(event) {
+    document.onkeyup = (event) => {
       const keyUp = document.getElementById(event.code);
-      if (keyUp != null && event.code !== "CapsLock")
+      const keyShiftLeft = document.getElementById("ShiftLeft");
+      const keyShiftRight = document.getElementById("ShiftRight");
+      const keyControlLeft = document.getElementById("ControlLeft");
+      const keyControlRight = document.getElementById("ControlRight");
+      if (event.code.includes("Shift")) {
+        this.shiftKey = false;
+        keyShiftLeft.classList.remove("keyActive");
+        keyShiftRight.classList.remove("keyActive");
+      }
+      if (event.code.includes("Control")) {
+        this.ctrlKey = false;
+        keyControlLeft.classList.remove("keyActive");
+        keyControlRight.classList.remove("keyActive");
+      }
+      if (keyUp != null && event.code !== "CapsLock") {
         keyUp.classList.remove("keyActive");
+      }
     };
   }
 
@@ -381,13 +397,49 @@ class VirtualKeyboard {
       event.stopImmediatePropagation();
       event.preventDefault();
 
+      const keyShiftLeft = document.getElementById("ShiftLeft");
+      const keyShiftRight = document.getElementById("ShiftRight");
+      const keyControlLeft = document.getElementById("ControlLeft");
+      const keyControlRight = document.getElementById("ControlRight");
+
       const keyCode = event.target.getAttribute("id");
-      let shiftKey = false;
-      if (keyCode && keyCode.includes("Shift")) shiftKey = true;
-      let ctrlKey = false;
-      if (keyCode && keyCode.includes("Control")) ctrlKey = true;
-      if (keyCode) this.keyHandle(event.target, shiftKey, ctrlKey);
-      if (keyCode !== "CapsLock") event.target.classList.remove("keyActive");
+
+      if (keyCode) {
+        if (keyCode.includes("Shift")) {
+          if (
+            keyShiftLeft.classList.contains("keyActive") ||
+            keyShiftRight.classList.contains("keyActive")
+          ) {
+            this.shiftKey = false;
+            keyShiftLeft.classList.remove("keyActive");
+            keyShiftRight.classList.remove("keyActive");
+          } else this.shiftKey = true;
+        }
+
+        if (keyCode.includes("Control")) {
+          if (
+            keyControlLeft.classList.contains("keyActive") ||
+            keyControlRight.classList.contains("keyActive")
+          ) {
+            this.ctrlKey = false;
+            keyControlLeft.classList.remove("keyActive");
+            keyControlRight.classList.remove("keyActive");
+          } else this.ctrlKey = true;
+        }
+
+        this.keyHandle(event.target);
+        if (
+          keyCode !== "CapsLock" &&
+          !keyCode.includes("Shift") &&
+          !keyCode.includes("Control")
+        )
+          event.target.classList.remove("keyActive");
+        if (keyCode.includes("Shift") && !this.shiftKey)
+          event.target.classList.remove("keyActive");
+
+        if (keyCode.includes("Control") && !this.ctrlKey)
+          event.target.classList.remove("keyActive");
+      }
     };
   }
 
