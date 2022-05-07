@@ -1,3 +1,3 @@
 import "./css/normalize.css";
 import "./css/keyboard.scss";
-import "./js/keyboard.js";
+import "./js/keyboard";
