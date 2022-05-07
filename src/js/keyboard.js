@@ -1,6 +1,6 @@
 import { keyEng, keyRus } from "./constants";
 
-let lang = "eng";
+// let lang = "eng";
 
 class VirtualKeyboard {
   constructor() {
@@ -62,6 +62,7 @@ class VirtualKeyboard {
   }
 
   addKeyboard(langKeyboard) {
+    this.lang = langKeyboard;
     let keyboardKey;
     if (langKeyboard === "eng") this.keyLang = keyEng;
     else this.keyLang = keyRus;
@@ -446,13 +447,13 @@ class VirtualKeyboard {
   /* ---------------смена языка по клику мыши --------------------- */
 
   changeLanguage() {
-    if (lang === "eng") {
-      lang = "rus";
-    } else lang = "eng";
+    if (this.lang === "eng") {
+      this.lang = "rus";
+    } else this.lang = "eng";
     localStorage.clear();
-    localStorage.setItem("lang_saved", lang);
+    localStorage.setItem("lang_saved", this.lang);
     this.removeKeyboard();
-    this.addKeyboard(lang);
+    this.addKeyboard(this.lang);
   }
 
   changeLanguageMouse() {
@@ -486,13 +487,4 @@ class VirtualKeyboard {
   }
 }
 
-const virtualKeyboard = new VirtualKeyboard();
-virtualKeyboard.addContent();
-if (localStorage.getItem("lang_saved"))
-  lang = localStorage.getItem("lang_saved");
-virtualKeyboard.addKeyboard(lang);
-virtualKeyboard.keyboardEvent();
-virtualKeyboard.keyboardEventCancel();
-virtualKeyboard.mouseEvent();
-virtualKeyboard.changeLanguageMouse();
-virtualKeyboard.someKeys();
+export default VirtualKeyboard;
