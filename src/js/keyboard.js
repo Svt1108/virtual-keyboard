@@ -6,7 +6,7 @@ class VirtualKeyboard {
     this.shiftKey = false;
     this.ctrlKey = false;
     this.copyboard = "";
-    this.colsNumber = 90;
+    this.colsNumber = 94;
     this.addContent();
   }
 
@@ -200,7 +200,7 @@ class VirtualKeyboard {
     this.textarea.value = finText;
     this.textarea.focus();
     this.textarea.value = this.textarea.value.replace(
-      /([^\n]{90})([^\n]{1})/gi,
+      /([^\n]{94})([^\n]{1})/gi,
       "$1\n$2"
     );
     this.textarea.selectionEnd = start === end ? end + newSymbol.length : end;
@@ -391,7 +391,7 @@ class VirtualKeyboard {
         this.textarea.value.substring(end);
       this.setText(finText);
       this.textarea.value = this.textarea.value.replace(
-        /([^\n]{90})([^\n]{1})/gi,
+        /([^\n]{94})([^\n]{1})/gi,
         "$1\n$2"
       );
       this.textarea.selectionEnd =
@@ -427,7 +427,7 @@ class VirtualKeyboard {
         this.textarea.value.substring(end);
       this.setText(finText);
       this.textarea.value = this.textarea.value.replace(
-        /([^\n]{90})([^\n]{1})/gi,
+        /([^\n]{94})([^\n]{1})/gi,
         "$1\n$2"
       );
       this.textarea.selectionEnd = start === end ? end + newSymbol.length : end;
@@ -447,6 +447,12 @@ class VirtualKeyboard {
       this.shiftKey = true;
       Object.keys(this.keyLang).forEach((key) => {
         this[key].innerHTML = `${this.keyLang[key].valueShift}`;
+        if (key.includes("Digit") || key === "Minus" || key === "Equal") {
+          const keyboardShift = document.createElement("div");
+          keyboardShift.innerHTML = `${this.keyLang[key].value}`;
+          keyboardShift.classList.add("keyboard__key__shift");
+          this[key].appendChild(keyboardShift);
+        }
       });
     }
     if (event.ctrlKey) this.ctrlKey = true;
@@ -463,6 +469,12 @@ class VirtualKeyboard {
       this.shiftKey = false;
       Object.keys(this.keyLang).forEach((key) => {
         this[key].innerHTML = `${this.keyLang[key].value}`;
+        if (key.includes("Digit") || key === "Minus" || key === "Equal") {
+          const keyboardShift = document.createElement("div");
+          keyboardShift.innerHTML = `${this.keyLang[key].valueShift}`;
+          keyboardShift.classList.add("keyboard__key__shift");
+          this[key].appendChild(keyboardShift);
+        }
       });
       this.ShiftLeft.classList.remove("keyActive");
       this.ShiftRight.classList.remove("keyActive");
@@ -492,6 +504,12 @@ class VirtualKeyboard {
         this.shiftKey = false;
         Object.keys(this.keyLang).forEach((key) => {
           this[key].innerHTML = `${this.keyLang[key].value}`;
+          if (key.includes("Digit") || key === "Minus" || key === "Equal") {
+            const keyboardShift = document.createElement("div");
+            keyboardShift.innerHTML = `${this.keyLang[key].valueShift}`;
+            keyboardShift.classList.add("keyboard__key__shift");
+            this[key].appendChild(keyboardShift);
+          }
         });
         this.ShiftLeft.classList.remove("keyActive");
         this.ShiftRight.classList.remove("keyActive");
@@ -499,6 +517,12 @@ class VirtualKeyboard {
         this.shiftKey = true;
         Object.keys(this.keyLang).forEach((key) => {
           this[key].innerHTML = `${this.keyLang[key].valueShift}`;
+          if (key.includes("Digit") || key === "Minus" || key === "Equal") {
+            const keyboardShift = document.createElement("div");
+            keyboardShift.innerHTML = `${this.keyLang[key].value}`;
+            keyboardShift.classList.add("keyboard__key__shift");
+            this[key].appendChild(keyboardShift);
+          }
         });
       }
     }
