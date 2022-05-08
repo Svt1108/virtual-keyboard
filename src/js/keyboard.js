@@ -458,7 +458,6 @@ class VirtualKeyboard {
     if (keyDown != null) {
       event.preventDefault();
       this.keyHandle(keyDown);
-      this.addNewStringSymbolToTextarea();
     }
   }
 
@@ -538,7 +537,6 @@ class VirtualKeyboard {
     }
 
     this.keyHandle(event.target);
-    this.addNewStringSymbolToTextarea();
 
     if (
       keyCode !== "CapsLock" &&
