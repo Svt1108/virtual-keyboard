@@ -74,6 +74,7 @@ html {
     justify-content: center;
 
     .keyboard__key {
+      position: relative;
       width: 5rem;
       height: 5rem;
       background-color: #005f52;
@@ -98,6 +99,16 @@ html {
         color: #efc3e7;
         border: #efc3e7 3px solid;
         transform: scale(0.8);
+      }
+
+      .keyboard__key__shift {
+        position: absolute;
+        right: 0.4rem;
+        font-size: 1.2rem;
+        opacity: 0.8;
+        justify-self: flex-end;
+        align-self: flex-start;
+        padding-left: 0.1rem;
       }
     }
 

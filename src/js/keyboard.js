@@ -133,6 +133,17 @@ class VirtualKeyboard {
       this.keyboard.appendChild(this[keyCode]);
 
       if (
+        keyCode.includes("Digit") ||
+        keyCode === "Minus" ||
+        keyCode === "Equal"
+      ) {
+        const keyboardShift = document.createElement("div");
+        keyboardShift.innerHTML = `${this.keyLang[keyCode].valueShift}`;
+        keyboardShift.classList.add("keyboard__key__shift");
+        this[keyCode].appendChild(keyboardShift);
+      }
+
+      if (
         keyCode === "Backspace" ||
         keyCode === "Delete" ||
         keyCode === "Enter" ||
@@ -386,9 +397,12 @@ class VirtualKeyboard {
     ) {
       /* ----------------------------Common symbols--------------------------*/
 
-      const inputSymbol = !this.flagCaps ? value : value.toUpperCase();
+      let newSymbol = "";
 
-      const newSymbol = shiftKey === true ? valueShift : inputSymbol;
+      if (this.flagCaps && shiftKey) newSymbol = valueShift.toLowerCase();
+      else if (!this.flagCaps && shiftKey) newSymbol = valueShift;
+      else if (this.flagCaps && !shiftKey) newSymbol = value.toUpperCase();
+      else if (!this.flagCaps && !shiftKey) newSymbol = value;
 
       const finText =
         this.textarea.value.substring(0, start) +
@@ -404,8 +418,8 @@ class VirtualKeyboard {
   keyboardEvent(event) {
     const keyDown = this[event.code];
 
-    if (!event.code.includes("Shift") && event.shiftKey) this.shiftKey = true;
-    if (!event.code.includes("Control") && event.ctrlKey) this.ctrlKey = true;
+    if (event.shiftKey) this.shiftKey = true;
+    if (event.ctrlKey) this.ctrlKey = true;
 
     if (keyDown != null) {
       event.preventDefault();
@@ -419,13 +433,11 @@ class VirtualKeyboard {
       this.shiftKey = false;
       this.ShiftLeft.classList.remove("keyActive");
       this.ShiftRight.classList.remove("keyActive");
-    }
-    if (event.code.includes("Control")) {
+    } else if (event.code.includes("Control")) {
       this.ctrlKey = false;
       this.ControlLeft.classList.remove("keyActive");
       this.ControlRight.classList.remove("keyActive");
-    }
-    if (keyUp != null && event.code !== "CapsLock") {
+    } else if (keyUp != null && event.code !== "CapsLock") {
       keyUp.classList.remove("keyActive");
     }
   }
