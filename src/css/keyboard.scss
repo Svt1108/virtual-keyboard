@@ -38,7 +38,6 @@ html {
   }
 
   .textarea {
-    width: 100%;
     align-self: center;
     height: 33%;
     background-color: #fff;
@@ -46,18 +45,15 @@ html {
     box-shadow: inset 0 0 0.5em #002e2c;
     border-radius: 5px;
     font-size: 2rem;
+    font-family: UbuntuMono, "Courier New", Courier, monospace;
     color: #002e2c;
     padding: 2rem;
     row-gap: 1.5rem;
     overflow-y: auto;
+    overflow-x: hidden;
     white-space: pre-wrap;
     line-height: 140%;
     outline: none;
-
-    .textarea__p {
-      width: 100%;
-      font-size: 2rem;
-    }
   }
 
   .keyboard {

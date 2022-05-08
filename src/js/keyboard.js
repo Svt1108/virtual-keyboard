@@ -6,6 +6,7 @@ class VirtualKeyboard {
     this.shiftKey = false;
     this.ctrlKey = false;
     this.copyboard = "";
+    this.colsNumber = 90;
     this.addContent();
   }
 
@@ -25,6 +26,7 @@ class VirtualKeyboard {
     this.textarea = document.createElement("textarea");
     this.textarea.classList.add("textarea");
     this.textarea.setAttribute("id", `textarea`);
+    this.textarea.setAttribute("cols", `${this.colsNumber}`);
     wrap.appendChild(this.textarea);
 
     this.keyboard = document.createElement("div");
@@ -78,11 +80,7 @@ class VirtualKeyboard {
       this[keyCode] = document.createElement("div");
       this[keyCode].setAttribute("id", `${keyCode}`);
 
-      if (keyCode === "ArrowLeft") this[keyCode].innerHTML = `&larr;`;
-      else if (keyCode === "ArrowRight") this[keyCode].innerHTML = `&rarr;`;
-      else if (keyCode === "ArrowUp") this[keyCode].innerHTML = `&uarr;`;
-      else if (keyCode === "ArrowDown") this[keyCode].innerHTML = `&darr;`;
-      else if (keyCode.includes("Control")) this[keyCode].innerHTML = `Ctrl`;
+      if (keyCode.includes("Control")) this[keyCode].innerHTML = `Ctrl`;
       else if (keyCode.includes("Meta")) this[keyCode].innerHTML = `Win`;
       else if (keyCode === "Delete") this[keyCode].innerHTML = `Del`;
       else if (keyCode.includes("Alt")) this[keyCode].innerHTML = `Alt`;
@@ -191,6 +189,7 @@ class VirtualKeyboard {
   }
 
   handleTab() {
+    const initLength = this.textarea.value.length;
     const start = this.textarea.selectionStart;
     const end = this.textarea.selectionEnd;
     const newSymbol = "    ";
@@ -200,7 +199,15 @@ class VirtualKeyboard {
       this.textarea.value.substring(end);
     this.textarea.value = finText;
     this.textarea.focus();
+    this.textarea.value = this.textarea.value.replace(
+      /([^\n]{90})([^\n]{1})/gi,
+      "$1\n$2"
+    );
     this.textarea.selectionEnd = start === end ? end + newSymbol.length : end;
+    if (initLength + newSymbol.length < this.textarea.value.length) {
+      this.textarea.selectionEnd += 1;
+      this.textarea.selectionStart += 1;
+    }
   }
 
   handleDelete() {
@@ -376,14 +383,23 @@ class VirtualKeyboard {
       this.textarea.selectionEnd = start;
       this.textarea.selectionStart = start;
     } else if (ctrlKey === true && keyCode === "KeyV") {
+      const initLength = this.textarea.value.length;
       const finText =
         this.textarea.value.substring(0, start) +
         this.textarea.value.substring(start, end) +
         this.copyboard +
         this.textarea.value.substring(end);
       this.setText(finText);
+      this.textarea.value = this.textarea.value.replace(
+        /([^\n]{90})([^\n]{1})/gi,
+        "$1\n$2"
+      );
       this.textarea.selectionEnd =
         start === end ? end + this.copyboard.length : end;
+      if (initLength + this.copyboard.length < this.textarea.value.length) {
+        this.textarea.selectionEnd += 1;
+        this.textarea.selectionStart += 1;
+      }
     } else if (shiftKey === true && keyCode === "AltLeft") {
       this.changeLanguage();
       this.shiftKey = "false";
@@ -398,6 +414,7 @@ class VirtualKeyboard {
       /* ----------------------------Common symbols--------------------------*/
 
       let newSymbol = "";
+      const initLength = this.textarea.value.length;
 
       if (this.flagCaps && shiftKey) newSymbol = valueShift.toLowerCase();
       else if (!this.flagCaps && shiftKey) newSymbol = valueShift;
@@ -409,7 +426,15 @@ class VirtualKeyboard {
         newSymbol +
         this.textarea.value.substring(end);
       this.setText(finText);
+      this.textarea.value = this.textarea.value.replace(
+        /([^\n]{90})([^\n]{1})/gi,
+        "$1\n$2"
+      );
       this.textarea.selectionEnd = start === end ? end + newSymbol.length : end;
+      if (initLength + newSymbol.length < this.textarea.value.length) {
+        this.textarea.selectionEnd += 1;
+        this.textarea.selectionStart += 1;
+      }
     }
   }
 
@@ -418,7 +443,12 @@ class VirtualKeyboard {
   keyboardEvent(event) {
     const keyDown = this[event.code];
 
-    if (event.shiftKey) this.shiftKey = true;
+    if (event.shiftKey) {
+      this.shiftKey = true;
+      Object.keys(this.keyLang).forEach((key) => {
+        this[key].innerHTML = `${this.keyLang[key].valueShift}`;
+      });
+    }
     if (event.ctrlKey) this.ctrlKey = true;
 
     if (keyDown != null) {
@@ -431,6 +461,9 @@ class VirtualKeyboard {
     const keyUp = this[event.code];
     if (event.code.includes("Shift")) {
       this.shiftKey = false;
+      Object.keys(this.keyLang).forEach((key) => {
+        this[key].innerHTML = `${this.keyLang[key].value}`;
+      });
       this.ShiftLeft.classList.remove("keyActive");
       this.ShiftRight.classList.remove("keyActive");
     } else if (event.code.includes("Control")) {
@@ -457,9 +490,17 @@ class VirtualKeyboard {
         this.ShiftRight.classList.contains("keyActive")
       ) {
         this.shiftKey = false;
+        Object.keys(this.keyLang).forEach((key) => {
+          this[key].innerHTML = `${this.keyLang[key].value}`;
+        });
         this.ShiftLeft.classList.remove("keyActive");
         this.ShiftRight.classList.remove("keyActive");
-      } else this.shiftKey = true;
+      } else {
+        this.shiftKey = true;
+        Object.keys(this.keyLang).forEach((key) => {
+          this[key].innerHTML = `${this.keyLang[key].valueShift}`;
+        });
+      }
     }
 
     if (keyCode.includes("Control")) {
