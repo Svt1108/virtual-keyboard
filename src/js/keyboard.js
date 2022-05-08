@@ -154,6 +154,13 @@ class VirtualKeyboard {
     });
   }
 
+  addNewStringSymbolToTextarea() {
+    this.textarea.value = this.textarea.value.replace(
+      /([^\n]{94})([^\n]{1})/gi,
+      "$1\n$2"
+    );
+  }
+
   handleEnter() {
     const start = this.textarea.selectionStart;
     const end = this.textarea.selectionEnd;
@@ -199,10 +206,7 @@ class VirtualKeyboard {
       this.textarea.value.substring(end);
     this.textarea.value = finText;
     this.textarea.focus();
-    this.textarea.value = this.textarea.value.replace(
-      /([^\n]{94})([^\n]{1})/gi,
-      "$1\n$2"
-    );
+    this.addNewStringSymbolToTextarea();
     this.textarea.selectionEnd = start === end ? end + newSymbol.length : end;
     if (initLength + newSymbol.length < this.textarea.value.length) {
       this.textarea.selectionEnd += 1;
@@ -390,10 +394,7 @@ class VirtualKeyboard {
         this.copyboard +
         this.textarea.value.substring(end);
       this.setText(finText);
-      this.textarea.value = this.textarea.value.replace(
-        /([^\n]{94})([^\n]{1})/gi,
-        "$1\n$2"
-      );
+      this.addNewStringSymbolToTextarea();
       this.textarea.selectionEnd =
         start === end ? end + this.copyboard.length : end;
       if (initLength + this.copyboard.length < this.textarea.value.length) {
@@ -426,10 +427,7 @@ class VirtualKeyboard {
         newSymbol +
         this.textarea.value.substring(end);
       this.setText(finText);
-      this.textarea.value = this.textarea.value.replace(
-        /([^\n]{94})([^\n]{1})/gi,
-        "$1\n$2"
-      );
+      this.addNewStringSymbolToTextarea();
       this.textarea.selectionEnd = start === end ? end + newSymbol.length : end;
       if (initLength + newSymbol.length < this.textarea.value.length) {
         this.textarea.selectionEnd += 1;
@@ -460,6 +458,7 @@ class VirtualKeyboard {
     if (keyDown != null) {
       event.preventDefault();
       this.keyHandle(keyDown);
+      this.addNewStringSymbolToTextarea();
     }
   }
 
@@ -539,6 +538,7 @@ class VirtualKeyboard {
     }
 
     this.keyHandle(event.target);
+    this.addNewStringSymbolToTextarea();
 
     if (
       keyCode !== "CapsLock" &&
