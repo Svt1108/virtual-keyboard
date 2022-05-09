@@ -178,7 +178,7 @@ class VirtualKeyboard {
   }
 
   handleCapsLock(keyDown) {
-    if (!this.flagCaps) {
+    if (this.flagCaps === false) {
       for (let k = 0; k < this.keyboard.children.length; k += 1) {
         const key = this.keyboard.children[k];
         if (key.classList.contains("key_letter"))
@@ -401,12 +401,14 @@ class VirtualKeyboard {
         this.textarea.selectionEnd += 1;
         this.textarea.selectionStart += 1;
       }
-    } else if (shiftKey === true && keyCode === "AltLeft") {
-      this.changeLanguage();
-      this.shiftKey = "false";
-      this.ShiftLeft.classList.remove("keyActive");
-      this.ShiftRight.classList.remove("keyActive");
-    } else if (
+    }
+    // else if (shiftKey === true && keyCode === "AltLeft") {
+    //   this.changeLanguage();
+    //   this.shiftKey = "false";
+    //   this.ShiftLeft.classList.remove("keyActive");
+    //   this.ShiftRight.classList.remove("keyActive");
+    // }
+    else if (
       !keyCode.includes("Shift") &&
       !keyCode.includes("Control") &&
       !keyCode.includes("Alt") &&
@@ -417,10 +419,13 @@ class VirtualKeyboard {
       let newSymbol = "";
       const initLength = this.textarea.value.length;
 
-      if (this.flagCaps && shiftKey) newSymbol = valueShift.toLowerCase();
-      else if (!this.flagCaps && shiftKey) newSymbol = valueShift;
-      else if (this.flagCaps && !shiftKey) newSymbol = value.toUpperCase();
-      else if (!this.flagCaps && !shiftKey) newSymbol = value;
+      if (this.flagCaps === true && shiftKey === true)
+        newSymbol = valueShift.toLowerCase();
+      else if (this.flagCaps === false && shiftKey === true)
+        newSymbol = valueShift;
+      else if (this.flagCaps === true && shiftKey === false)
+        newSymbol = value.toUpperCase();
+      else if (this.flagCaps === false && shiftKey === false) newSymbol = value;
 
       const finText =
         this.textarea.value.substring(0, start) +
@@ -452,6 +457,10 @@ class VirtualKeyboard {
           this[key].appendChild(keyboardShift);
         }
       });
+      // if (this.pressed.has("AltLeft")) {
+      //   this.pressed.clear();
+      //   this.changeLanguage();
+      // }
     }
     if (event.ctrlKey) this.ctrlKey = true;
 
@@ -541,6 +550,13 @@ class VirtualKeyboard {
       } else this.ctrlKey = true;
     }
 
+    if (this.shiftKey === true && keyCode === "AltLeft") {
+      this.changeLanguage();
+      this.shiftKey = "false";
+      this.ShiftLeft.classList.remove("keyActive");
+      this.ShiftRight.classList.remove("keyActive");
+    }
+
     this.keyHandle(eventTarget);
 
     if (
@@ -583,20 +599,22 @@ class VirtualKeyboard {
   /* ---------------смена языка по нажатию клавиш --------------------- */
 
   someKeys() {
-    const pressed = new Set();
+    this.pressed = new Set();
 
     document.addEventListener("keydown", (event) => {
       event.preventDefault();
-      pressed.add(event.code);
+      if (event.code === "ShiftLeft" || event.code === "AltLeft")
+        this.pressed.add(event.code);
 
-      if (pressed.has("ShiftLeft") && pressed.has("AltLeft")) {
-        pressed.clear();
+      if (this.pressed.has("ShiftLeft") && this.pressed.has("AltLeft")) {
+        //       this.pressed.clear();
         this.changeLanguage();
       }
     });
 
     document.addEventListener("keyup", (event) => {
-      pressed.delete(event.code);
+      event.preventDefault();
+      this.pressed.delete(event.code);
     });
   }
 
