@@ -1,0 +1,246 @@
+@import "./fonts";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 10px;
+  font-family: Ubuntu, sans-serif;
+  font-weight: 400;
+}
+
+.main {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(170deg, #005f52, #009994);
+}
+
+.wrap {
+  width: 100rem;
+  height: 73rem;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    width: 100%;
+    height: 5%;
+    text-align: center;
+    color: #f2cbd1;
+    font-size: 3.5rem;
+    justify-content: center;
+    letter-spacing: 0.06em;
+  }
+
+  .textarea {
+    align-self: center;
+    height: 33%;
+    background-color: #fff;
+    border: 2px solid #00908f;
+    box-shadow: inset 0 0 0.5em #002e2c;
+    border-radius: 5px;
+    font-size: 2rem;
+    font-family: UbuntuMono, "Courier New", Courier, monospace;
+    color: #002e2c;
+    padding: 2rem;
+    row-gap: 1.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    line-height: 140%;
+    outline: none;
+  }
+
+  .keyboard {
+    width: 100%;
+    min-width: 87rem;
+    height: 43%;
+    background-color: #5d0339;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.6rem;
+    padding: 1rem;
+    border-radius: 7px;
+    box-shadow: inset 0 0 0.5em #00908f;
+    justify-content: center;
+
+    .keyboard__key {
+      position: relative;
+      width: 5rem;
+      height: 5rem;
+      background-color: #005f52;
+      color: #f2cbd1;
+      border: #f2cbd1 1px solid;
+      border-radius: 5px;
+      box-shadow: 0.1rem 0.1rem 0.3rem 0.1rem rgba(242, 203, 209, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      transition: 0.5s;
+
+      &:hover {
+        background-color: #7ebbaa;
+        color: #005f52;
+        cursor: pointer;
+      }
+
+      &:active {
+        background-color: #005f52;
+        color: #efc3e7;
+        border: #efc3e7 3px solid;
+        transform: scale(0.8);
+      }
+
+      .keyboard__key__shift {
+        position: absolute;
+        right: 0.4rem;
+        font-size: 1.2rem;
+        opacity: 0.8;
+        justify-self: flex-end;
+        align-self: flex-start;
+        padding-left: 0.1rem;
+      }
+    }
+
+    .keyActive {
+      background-color: #005f52;
+      color: #efc3e7;
+      border: #efc3e7 3px solid;
+      transform: scale(0.8);
+    }
+
+    .key_letter {
+    }
+
+    .key_digit {
+      background-color: #014d42;
+    }
+
+    .key_dark {
+      background-color: #002e2c;
+      font-size: 1.6rem;
+    }
+
+    .key_backspace {
+      width: 12rem;
+    }
+
+    .key_tabdel {
+      width: 5.6rem;
+    }
+
+    .key_caps {
+      width: 9rem;
+    }
+
+    .key_shiftleft {
+      width: 10.6rem;
+    }
+
+    .key_shiftright {
+      width: 11.7rem;
+    }
+
+    .key_enter {
+      width: 13.4rem;
+    }
+
+    .key_ctrlalt {
+      width: 6.2rem;
+    }
+
+    .key_space {
+      width: 35rem;
+    }
+
+    .key_arrow {
+      width: 5rem;
+      font-size: 2.2rem;
+    }
+
+    .breakrow {
+      flex-basis: 100%;
+      height: 0;
+    }
+  }
+
+  .addition {
+    width: 100%;
+    height: 19%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0 0 0;
+    gap: 0.8rem;
+    color: #fff;
+
+    .windows {
+      width: 100%;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .change {
+      display: flex;
+      width: 100%;
+      height: 33%;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+
+      .change__text {
+        font-size: 1.5rem;
+
+        span {
+          font-size: 1.5rem;
+          color: #efc3e7;
+        }
+      }
+
+      .change__button {
+        width: 14rem;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #005f52;
+        border: 1px solid #002e2c;
+        border-radius: 5px;
+        box-shadow: 0.1rem 0.1rem 0.2rem 0.1rem #005f52;
+        font-size: 1.4rem;
+        cursor: pointer;
+        color: #efc3e7;
+        transition: 0.5s;
+
+        &:hover {
+          background-color: #7ebbaa;
+          color: #005f52;
+        }
+
+        &:active {
+          background-color: #005f52;
+          color: #efc3e7;
+          border: #efc3e7 3px solid;
+          transform: scale(0.8);
+        }
+      }
+    }
+
+    .hotkeys {
+      width: 100%;
+      font-size: 1.3rem;
+      text-align: center;
+      span {
+        font-size: 1.3rem;
+        color: #efc3e7;
+      }
+    }
+  }
+}
