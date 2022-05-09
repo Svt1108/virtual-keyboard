@@ -401,14 +401,7 @@ class VirtualKeyboard {
         this.textarea.selectionEnd += 1;
         this.textarea.selectionStart += 1;
       }
-    }
-    // else if (shiftKey === true && keyCode === "AltLeft") {
-    //   this.changeLanguage();
-    //   this.shiftKey = "false";
-    //   this.ShiftLeft.classList.remove("keyActive");
-    //   this.ShiftRight.classList.remove("keyActive");
-    // }
-    else if (
+    } else if (
       !keyCode.includes("Shift") &&
       !keyCode.includes("Control") &&
       !keyCode.includes("Alt") &&
@@ -457,10 +450,6 @@ class VirtualKeyboard {
           this[key].appendChild(keyboardShift);
         }
       });
-      // if (this.pressed.has("AltLeft")) {
-      //   this.pressed.clear();
-      //   this.changeLanguage();
-      // }
     }
     if (event.ctrlKey) this.ctrlKey = true;
 
@@ -607,7 +596,6 @@ class VirtualKeyboard {
         this.pressed.add(event.code);
 
       if (this.pressed.has("ShiftLeft") && this.pressed.has("AltLeft")) {
-        //       this.pressed.clear();
         this.changeLanguage();
       }
     });
