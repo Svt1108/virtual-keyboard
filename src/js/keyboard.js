@@ -491,7 +491,12 @@ class VirtualKeyboard {
     event.stopImmediatePropagation();
     event.preventDefault();
 
-    const keyCode = event.target.getAttribute("id");
+    const eventTarget = event.target.classList.contains("keyboard__key__shift")
+      ? event.target.parentElement
+      : event.target;
+
+    const keyCode = eventTarget.getAttribute("id");
+
     if (!keyCode) return null;
 
     if (keyCode.includes("Shift")) {
@@ -536,22 +541,22 @@ class VirtualKeyboard {
       } else this.ctrlKey = true;
     }
 
-    this.keyHandle(event.target);
+    this.keyHandle(eventTarget);
 
     if (
       keyCode !== "CapsLock" &&
       !keyCode.includes("Shift") &&
       !keyCode.includes("Control")
     ) {
-      event.target.classList.remove("keyActive");
+      eventTarget.classList.remove("keyActive");
     }
 
     if (keyCode.includes("Shift") && !this.shiftKey) {
-      event.target.classList.remove("keyActive");
+      eventTarget.classList.remove("keyActive");
     }
 
     if (keyCode.includes("Control") && !this.ctrlKey) {
-      event.target.classList.remove("keyActive");
+      eventTarget.classList.remove("keyActive");
     }
 
     return null;
